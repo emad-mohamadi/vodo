@@ -16,6 +16,9 @@ def search():
 
 @app.route('/chat')
 def llm_chat():
-    from llm import chat
+    from llm import AI
     query = request.args.get('q')
-    return jsonify({"result": chat(query)})
+    id = request.args.get('id')
+    assistant = AI(id='admin')
+    response = assistant.chat(prompt=query)
+    return jsonify({"result": response})
