@@ -3,6 +3,11 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 
+@app.route('/')
+def welcome():
+    return "Under development..."
+
+
 @app.route('/hello')
 def hello():
     return jsonify({"result": "Hello"})
