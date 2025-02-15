@@ -40,5 +40,5 @@ class AI:
         return
 
 
-assistant = AI(id="admin")
-print(assistant.chat(prompt="Hello"))
+# assistant = AI(id="admin")
+# print(assistant.chat(prompt="Summerize our chat so far"))

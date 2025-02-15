@@ -10,5 +10,29 @@
     {
         "role": "assistant",
         "content": "Hello! How can I assist you today? \ud83d\ude0a"
+    },
+    {
+        "role": "user",
+        "content": "How are you?"
+    },
+    {
+        "role": "assistant",
+        "content": "I'm just a bunch of code, so I don't have feelings\u2014but thanks for asking! \ud83d\ude0a How about you? How are you doing today?"
+    },
+    {
+        "role": "user",
+        "content": "Can you remmember what i just said?"
+    },
+    {
+        "role": "assistant",
+        "content": "I can remember the context of our conversation while we're chatting, so I can keep things flowing naturally. However, once our chat ends, I don\u2019t retain any memory of it. Each conversation starts fresh!  \n\nLet me know if you want me to revisit something you just mentioned. \ud83d\ude0a"
+    },
+    {
+        "role": "user",
+        "content": "Summerize our chat so far"
+    },
+    {
+        "role": "assistant",
+        "content": "Sure! Here's a quick summary:\n\nYou said hello, asked how I am, and then checked if I could remember what you said. I explained that I can keep track of the conversation while we're chatting, but I don't retain memory afterward. \n\nThat's everything so far! \ud83d\ude0a"
     }
 ]
