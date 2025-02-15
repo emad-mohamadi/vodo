@@ -31,6 +31,7 @@ class AI:
             {"role": "assistant",
                 "content": response.choices[0].message.content}
         )
+        self.save_history()
         return self.history[-1]['content']
 
     def save_history(self):
