@@ -36,5 +36,9 @@ class AI:
 
     def save_history(self):
         with open(f"{self.id}.json", "w") as file:
-            file.write(json.dump(self.history, indent=4))
+            json.dump(self.history, file, indent=4)
         return
+
+
+assistant = AI(id="admin")
+print(assistant.chat(prompt="Hello"))
