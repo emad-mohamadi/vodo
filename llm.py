@@ -35,10 +35,9 @@ class AI:
         return self.history[-1]['content']
 
     def save_history(self):
-        with open(f"{self.id}.json", "w") as file:
-            json.dump(self.history, file, indent=4)
-        return
-
+        from logic import DataBase
+        database = DataBase()
+        database.table("data").insert({"id": self.id, "history": self.history})
 
 # assistant = AI(id="admin")
-# print(assistant.chat(prompt="Summerize our chat so far"))
+# print(assistant.chat(prompt="Use python"))
