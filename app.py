@@ -5,7 +5,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def welcome():
-    return "Under development..."
+    from logic import DataBase
+    data = DataBase()
+    return data.get_tasks()
 
 
 @app.route('/hello')
