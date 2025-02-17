@@ -27,3 +27,7 @@ class Task:
     def complete_toggle(self):
         self.completed = not self.completed
         return
+
+
+data = DataBase()
+print(data.get_tasks())
