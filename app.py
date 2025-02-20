@@ -47,4 +47,4 @@ def check_task():
         check=(request.args.get('check') == 'true'),
         id=1
     )
-    return jsonify({"result": True})
+    return jsonify({"result": request.args.get('check') == 'true'})
