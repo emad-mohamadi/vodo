@@ -36,3 +36,11 @@ def add_task():
     data = DataBase()
     data.add_task(task, 1)
     return jsonify({"result": True})
+
+
+@app.route('/tasks/check')
+def check_task():
+    from logic import DataBase
+    data = DataBase()
+    data.check_task(request.args.get('i'), 1)
+    return jsonify({"result": True})

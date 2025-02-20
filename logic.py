@@ -47,9 +47,9 @@ class DataBase(Client):
         ).eq("id", id).execute()
         return
 
-    def modify_task(self, task: Task, index: int, id: int):
+    def check_task(self, index: int, id: int):
         response = self.table("data").select("tasks").eq("id", id).execute()
-        response.data[0]["tasks"][index] = task.__repr__()
+        response.data[0]["tasks"][index]["completed"] = not response.data[0]["tasks"][index]["completed"]
         self.table("data").update(
             {
                 "tasks":
