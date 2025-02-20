@@ -44,7 +44,7 @@ def check_task():
     data = DataBase()
     data.check_task(
         index=int(request.args.get('i')),
-        check=bool(request.args.get('check')),
+        check=(request.args.get('check') == 'true'),
         id=1
     )
     return jsonify({"result": True})
