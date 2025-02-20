@@ -35,4 +35,4 @@ def add_task():
     task = Task(name=request.args.get('name'))
     data = DataBase()
     data.add_task(task, 1)
-    return True
+    return jsonify({"result": True})
