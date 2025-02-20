@@ -47,9 +47,9 @@ class DataBase(Client):
         ).eq("id", id).execute()
         return
 
-    def check_task(self, index: int, id: int):
+    def check_task(self, index: int, check: bool, id: int):
         response = self.table("data").select("tasks").eq("id", id).execute()
-        response.data[0]["tasks"][index]["completed"] = not response.data[0]["tasks"][index]["completed"]
+        response.data[0]["tasks"][index]["completed"] = check
         self.table("data").update(
             {
                 "tasks":

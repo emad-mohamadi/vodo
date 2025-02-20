@@ -42,5 +42,9 @@ def add_task():
 def check_task():
     from logic import DataBase
     data = DataBase()
-    data.check_task(index=int(request.args.get('i')), id=1)
+    data.check_task(
+        index=int(request.args.get('i')),
+        check=bool(request.args.get('check')),
+        id=1
+    )
     return jsonify({"result": True})
