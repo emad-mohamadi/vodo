@@ -57,8 +57,3 @@ class DataBase(Client):
             }
         ).eq("id", id).execute()
         return
-
-
-# task = Task(name="Reading a book")
-# data = DataBase()
-# data.add_task(task, 1)

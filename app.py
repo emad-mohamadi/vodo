@@ -29,3 +29,12 @@ def llm_chat():
     assistant = AI(id='admin')
     response = assistant.chat(prompt=query)
     return jsonify({"result": response})
+
+
+@app.route('/tasks/add')
+def add_task():
+    from logic import DataBase, Task
+    task = Task(name=request.args.get('name'))
+    data = DataBase()
+    data.add_task(task, 1)
+    return True
