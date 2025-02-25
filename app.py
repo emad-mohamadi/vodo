@@ -68,7 +68,7 @@ def check_task():
     from logic import DataBase
     data = DataBase()
     data.check_task(
-        uuid=int(request.args.get('uuid')),
+        uuid=request.args.get('uuid'),
         check=(request.args.get('check') == 'true'),
         id=1
     )
