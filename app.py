@@ -37,8 +37,8 @@ def add_task():
         {
             "name": request.args.get('name'),
             "description": request.args.get('description'),
-            "completed": request.args.get('completed'),
-            "tags": request.args.get('tags'),
+            "completed": request.args.get('completed', False),
+            "tags": request.args.get('tags', []),
             "expected_duration": request.args.get('expected_duration'),
             "real_duration": request.args.get('real_duration'),
             "date": request.args.get('date'),
