@@ -1,8 +1,8 @@
-from datetime import datetime as dt
 from supabase import Client
 from os import environ
 from uuid import uuid1
 from datetime import datetime
+from datetime import timezone
 
 class DataBase(Client):
     def __init__(self, url=environ.get("SUPABASE_URL"), key=environ.get("SUPABASE_KEY")):
@@ -37,12 +37,12 @@ class DataBase(Client):
         response = self.table("tasks").select("*").execute()
         tasks = [task for task in response.data if task["uuid"] in task_ids]
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        ongoing_tasks = {task["uuid"]: task for task in tasks if now < datetime.fromisoformat(task["create_time"])}
-        today_tasks = {task["uuid"]: task for task in tasks if today_start <= datetime.fromisoformat(task["create_time"]) <= today_end}
-        overdue_tasks = {task["uuid"]: task for task in tasks if now > datetime.fromisoformat(task["create_time"])}
+        ongoing_tasks = {task["uuid"]: task for task in tasks if today_end < datetime.fromisoformat(task["created_at"])}
+        today_tasks = {task["uuid"]: task for task in tasks if today_start <= datetime.fromisoformat(task["created_at"]) <= today_end}
+        overdue_tasks = {task["uuid"]: task for task in tasks if today_start > datetime.fromisoformat(task["created_at"])}
 
         return ongoing_tasks, today_tasks, overdue_tasks
