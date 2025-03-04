@@ -41,8 +41,8 @@ class DataBase(Client):
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        ongoing_tasks = {task["uuid"]: task for task in tasks if today_end < datetime.fromisoformat(task["created_at"])}
-        today_tasks = {task["uuid"]: task for task in tasks if today_start <= datetime.fromisoformat(task["created_at"]) <= today_end}
-        overdue_tasks = {task["uuid"]: task for task in tasks if today_start > datetime.fromisoformat(task["created_at"])}
+        ongoing_tasks = {task["uuid"]: task for task in tasks if today_end < datetime.fromisoformat(task["datetime"])}
+        today_tasks = {task["uuid"]: task for task in tasks if today_start <= datetime.fromisoformat(task["datetime"]) <= today_end}
+        overdue_tasks = {task["uuid"]: task for task in tasks if today_start > datetime.fromisoformat(task["datetime"])}
 
         return ongoing_tasks, today_tasks, overdue_tasks
