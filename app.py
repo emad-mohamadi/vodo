@@ -31,20 +31,31 @@ def llm_chat():
 @app.route('/tasks/add')
 def add_task():
     from logic import DataBase
-    id = request.args.get('id')
+    from llm import AI
+    task_data = {
+        "name": request.args.get('name'),
+        "description": request.args.get('description'),
+        "completed": False,
+        "tags": [tag[1:] for tag in request.args.get('tags', '').split()],
+        "expected_duration": request.args.get('expected_duration'),
+        "real_duration": request.args.get('real_duration'),
+        "date": request.args.get('date'),
+        "repeat": request.args.get('repeat'),
+        "feedback": request.args.get('feedback'),
+    }
+
+    if not task_data["name"]:
+        return jsonify({"result": False})
+
+    # id = request.args.get('id')
+    assistant = AI(id=1)
+    task_data["tags"] = {
+        "user": task_data["tags"],
+        "assistant": assistant.get_tags(task_data=task_data)
+    }
     data = DataBase()
     data.add_task(
-        {
-            "name": request.args.get('name'),
-            "description": request.args.get('description'),
-            "completed": request.args.get('completed', False),
-            "tags": request.args.get('tags', []),
-            "expected_duration": request.args.get('expected_duration'),
-            "real_duration": request.args.get('real_duration'),
-            "date": request.args.get('date'),
-            "repeat": request.args.get('repeat'),
-            "feedback": request.args.get('feedback'),
-        },
+        data=task_data,
         user_id=1   # Default to user 1 for now
     )
     return jsonify({"result": True})

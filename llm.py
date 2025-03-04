@@ -5,17 +5,17 @@ import json
 
 
 class AI:
-    def __init__(self, id=uuid1().__str__()):
+    def __init__(self, id=1):
         self.id = id
         self.client = OpenAI(
             base_url="https://models.inference.ai.azure.com",
             api_key=environ.get("GITHUB_TOKEN"),
         )
-        try:
-            with open(f"{self.id}.json", "r") as file:
-                self.history = json.load(file)
-        except:
-            self.history = [{"role": "system", "content": ""}]
+        # try:
+        #     with open(f"{self.id}.json", "r") as file:
+        #         self.history = json.load(file)
+        # except:
+        self.history = [{"role": "system", "content": ""}]
         return
 
     def chat(self, prompt: str, role="user", model='gpt-4o', temprature=1) -> str:
@@ -31,8 +31,19 @@ class AI:
             {"role": "assistant",
                 "content": response.choices[0].message.content}
         )
-        self.save_history()
+        # self.save_history()
         return self.history[-1]['content']
+
+    def get_tags(self, task_data):
+        prompt = """
+            This dictionary contains information about a task which a user is going to add.
+            You are going to make some tags for it (about 3-4 tags). You should only send this tags seperated with spaces and no space in each name.
+            And they should be in PascalCase format.
+        """
+        response = self.chat(
+            prompt=json.dumps(task_data, indent=4)+'\n'+prompt,
+        )
+        return response.split()
 
     def save_history(self):
         from logic import DataBase
