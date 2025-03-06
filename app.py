@@ -97,6 +97,16 @@ def get_tasks():
         "overdue_tasks": overdue_tasks
     })
 
+@app.route('/projects/get')
+def get_projects():
+    from logic import DataBase
+    data = DataBase()
+    user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
+    projects = data.get_projects(user_id)
+    return jsonify({
+        "projects": projects,
+    })
+
 
 @app.route('/tasks/check')
 def check_task():

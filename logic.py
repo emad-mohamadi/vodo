@@ -64,17 +64,16 @@ class DataBase(Client):
             repeat = task.get("repeat", "none")  # Default is "none" if missing
 
             # # Handle repeating tasks
-            # if repeat != "none":
-            #     while task_datetime < today_start:
-            #         if repeat == "daily":
-            #             task_datetime += timedelta(days=1)
-            #         elif repeat == "weekly":
-            #             task_datetime += timedelta(weeks=1)
-            #         elif repeat == "monthly":
-            #             task_datetime += relativedelta(months=1)
-            #         elif repeat == "yearly":
-            #             task_datetime += relativedelta(years=1)
-
+            # if repeat != "none" and task_datetime < today_end:
+            #     if repeat == "daily":
+            #         task_datetime += timedelta(days=1)
+            #     elif repeat == "weekly":
+            #         task_datetime += timedelta(weeks=1)
+            #     elif repeat == "monthly":
+            #         task_datetime += relativedelta(months=1)
+            #     elif repeat == "yearly":
+            #         task_datetime += relativedelta(years=1)
+                
             # Categorize tasks
             if task_datetime > today_end:
                 ongoing_tasks[task["uuid"]] = task
@@ -84,3 +83,13 @@ class DataBase(Client):
                 overdue_tasks[task["uuid"]] = task
 
         return ongoing_tasks, today_tasks, overdue_tasks
+
+
+    def get_projects(self, user_id):
+        project_ids_response = self.table("users").select("projects").eq("id", user_id).execute()
+        project_ids = project_ids_response.data[0]["projects"] if project_ids_response.data else []
+
+        response = self.table("projects").select("*").execute()
+        projects = [project for project in response.data if project["uuid"] in project_ids]
+
+        return projects
