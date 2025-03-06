@@ -115,7 +115,12 @@ def get_projects():
     user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
     projects = data.get_projects(user_id)
     return jsonify({
-        "projects": projects,
+        "projects": [
+            {
+                "name": "No project",
+                "uuid": None,
+            }
+        ] + projects,
     })
 
 
