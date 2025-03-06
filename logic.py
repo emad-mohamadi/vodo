@@ -47,7 +47,7 @@ class DataBase(Client):
         overdue_tasks = {}
 
         for task in tasks:
-            task_datetime = task["datetime"]
+            task_datetime = datetime.fromisoformat(task["datetime"])
             repeat = task.get("repeat", "none")  # Default is "none" if missing
 
             # Handle repeating tasks
