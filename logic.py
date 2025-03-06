@@ -31,7 +31,7 @@ class DataBase(Client):
         return
 
     def add_to_project(self, project_id, task_id):
-        response = self.table("projects").select("tasks").eq("id", project_id).execute()
+        response = self.table("projects").select("tasks").eq("uuid", project_id).execute()
         self.table("projects").update(
             {
                 "tasks":
