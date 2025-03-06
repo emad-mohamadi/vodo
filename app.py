@@ -41,7 +41,7 @@ def add_task():
         "real_duration": request.args.get('real_duration'),
         "datetime": request.args.get('datetime'),
         "repeat": request.args.get('repeat'),
-        "feedback": request.args.get('feedback'),
+        "feedback": None,
     }
 
     if not task_data["name"]:
@@ -59,6 +59,30 @@ def add_task():
         user_id=1   # Default to user 1 for now
     )
     return jsonify({"result": True})
+
+@app.route('/projects/add')
+def add_project():
+    from logic import DataBase
+    project_data = {
+        "name": request.args.get('name'),
+        "description": request.args.get('description'),
+        "completed": False,
+        "deadline": request.args.get('deadline'),
+        "tasks": [],
+        "feedback": None,
+    }
+
+    if not project_data["name"]:
+        return jsonify({"result": False})
+
+    # id = request.args.get('id')
+    data = DataBase()
+    data.add_project(
+        data=project_data,
+        user_id=1   # Default to user 1 for now
+    )
+    return jsonify({"result": True})
+
 
 
 @app.route('/tasks/get')

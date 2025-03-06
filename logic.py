@@ -20,6 +20,19 @@ class DataBase(Client):
             }
         ).eq("id", user_id).execute()
         return
+    
+    def add_project(self, data, user_id):
+        project_id = uuid1().__str__()
+        data["uuid"] = project_id
+        response = self.table("projects").insert(data).execute()
+        response = self.table("users").select("projects").eq("id", user_id).execute()
+        self.table("users").update(
+            {
+                "projects":
+                    (response.data[0]["projects"] or []) + [project_id],
+            }
+        ).eq("id", user_id).execute()
+        return
 
     def check_task(self, uuid, check: bool, id: int):
         self.table("tasks").update(
