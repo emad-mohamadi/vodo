@@ -39,7 +39,7 @@ def add_task():
         "description": request.args.get('description'),
         "completed": False,
         "tags": [tag[1:] for tag in request.args.get('tags', '').split()],
-        "expected_duration": (int(request.args.get('expected_hours'))) * 60 + int(request.args.get('expected_minutes')),
+        "expected_duration": (int(request.args.get('expected_hours', '0'))) * 60 + int(request.args.get('expected_minutes', '0')),
         "real_duration": request.args.get('real_duration'),
         "datetime": request.args.get('datetime'),
         "repeat": request.args.get('repeat'),

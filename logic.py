@@ -37,7 +37,7 @@ class DataBase(Client):
                 "tasks":
                     (response.data[0]["tasks"] or []) + [task_id],
             }
-        ).eq("id", project_id).execute()
+        ).eq("uuid", project_id).execute()
         return
         
     def check_task(self, uuid, check: bool, id: int):
