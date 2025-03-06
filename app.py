@@ -81,6 +81,7 @@ def add_project():
         "deadline": request.args.get('deadline'),
         "tasks": [],
         "feedback": None,
+        "color": request.args.get('color'),
     }
 
     if not project_data["name"]:
