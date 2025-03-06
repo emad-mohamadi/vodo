@@ -32,7 +32,9 @@ def llm_chat():
 def add_task():
     from logic import DataBase
     from llm import AI
+    from uuid import uuid1
     task_data = {
+        "uuid": uuid1().__str__(),
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "completed": False,
@@ -51,9 +53,16 @@ def add_task():
     assistant = AI(id=1)
     task_data["tags"] = {
         "user": task_data["tags"],
-        "assistant": assistant.get_tags(task_data=task_data)
+        "project": request.args.get('project'),
+        "assistant": assistant.get_tags(task_data=task_data),
     }
     data = DataBase()
+    if task_data["tags"]["project"]:
+        data.add_to_project(
+            project_id = task_data["tags"]["project"],
+            task_id=task_data["uuid"],
+        )
+    
     data.add_task(
         data=task_data,
         user_id=1   # Default to user 1 for now
@@ -63,7 +72,9 @@ def add_task():
 @app.route('/projects/add')
 def add_project():
     from logic import DataBase
+    from uuid import uuid1
     project_data = {
+        "uuid": uuid1().__str__(),
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "completed": False,

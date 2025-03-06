@@ -9,31 +9,37 @@ class DataBase(Client):
         super().__init__(url, key)
 
     def add_task(self, data, user_id):
-        task_id = uuid1().__str__()
-        data["uuid"] = task_id
         response = self.table("tasks").insert(data).execute()
         response = self.table("users").select("tasks").eq("id", user_id).execute()
         self.table("users").update(
             {
                 "tasks":
-                    (response.data[0]["tasks"] or []) + [task_id],
+                    (response.data[0]["tasks"] or []) + [data["uuid"]],
             }
         ).eq("id", user_id).execute()
         return
     
     def add_project(self, data, user_id):
-        project_id = uuid1().__str__()
-        data["uuid"] = project_id
         response = self.table("projects").insert(data).execute()
         response = self.table("users").select("projects").eq("id", user_id).execute()
         self.table("users").update(
             {
                 "projects":
-                    (response.data[0]["projects"] or []) + [project_id],
+                    (response.data[0]["projects"] or []) + [data["uuid"]],
             }
         ).eq("id", user_id).execute()
         return
 
+    def add_to_project(self, project_id, task_id):
+        response = self.table("projects").select("tasks").eq("id", project_id).execute()
+        self.table("projects").update(
+            {
+                "tasks":
+                    (response.data[0]["tasks"] or []) + [task_id],
+            }
+        ).eq("id", project_id).execute()
+        return
+        
     def check_task(self, uuid, check: bool, id: int):
         self.table("tasks").update(
             {
