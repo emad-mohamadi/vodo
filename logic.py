@@ -50,17 +50,17 @@ class DataBase(Client):
             task_datetime = datetime.fromisoformat(task["datetime"])
             repeat = task.get("repeat", "none")  # Default is "none" if missing
 
-            # Handle repeating tasks
-            if repeat != "none":
-                while task_datetime < today_start:
-                    if repeat == "daily":
-                        task_datetime += timedelta(days=1)
-                    elif repeat == "weekly":
-                        task_datetime += timedelta(weeks=1)
-                    elif repeat == "monthly":
-                        task_datetime += relativedelta(months=1)
-                    elif repeat == "yearly":
-                        task_datetime += relativedelta(years=1)
+            # # Handle repeating tasks
+            # if repeat != "none":
+            #     while task_datetime < today_start:
+            #         if repeat == "daily":
+            #             task_datetime += timedelta(days=1)
+            #         elif repeat == "weekly":
+            #             task_datetime += timedelta(weeks=1)
+            #         elif repeat == "monthly":
+            #             task_datetime += relativedelta(months=1)
+            #         elif repeat == "yearly":
+            #             task_datetime += relativedelta(years=1)
 
             # Categorize tasks
             if task_datetime > today_end:
