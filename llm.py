@@ -1,6 +1,6 @@
 from openai import OpenAI
 from os import environ
-from uuid import uuid1
+from logic import DataBase
 import json
 
 
@@ -11,11 +11,13 @@ class AI:
             base_url="https://models.inference.ai.azure.com",
             api_key=environ.get("GITHUB_TOKEN"),
         )
+        self.data = DataBase()
+        self.history = self.data.table("users").select(
+            "history").eq("id", self.id).execute().data[0]["history"]
         # try:
         #     with open(f"{self.id}.json", "r") as file:
         #         self.history = json.load(file)
         # except:
-        self.history = [{"role": "system", "content": ""}]
         return
 
     def chat(self, prompt: str, role="user", model='gpt-4o', temprature=1) -> str:
@@ -28,10 +30,12 @@ class AI:
             top_p=1
         )
         self.history.append(
-            {"role": "assistant",
-                "content": response.choices[0].message.content}
+            {
+                "role": "assistant",
+                "content": response.choices[0].message.content,
+            }
         )
-        # self.save_history()
+        self.save_history()
         return self.history[-1]['content']
 
     def get_tags(self, task_data):
@@ -46,9 +50,12 @@ class AI:
         return response.split()
 
     def save_history(self):
-        from logic import DataBase
-        database = DataBase()
-        database.table("data").insert({"id": self.id, "history": self.history})
+        self.data.table("users").update(
+            {
+                "history": self.history
+            }
+        ).eq("id", self.id).execute()
 
-# assistant = AI(id="admin")
-# print(assistant.chat(prompt="Use python"))
+
+assistant = AI()
+print(assistant.chat(prompt="hello"))

@@ -23,9 +23,9 @@ def search():
 def llm_chat():
     from llm import AI
     query = request.args.get('q')
-    assistant = AI(id='admin')
+    assistant = AI()
     response = assistant.chat(prompt=query)
-    return jsonify({"result": response})
+    return jsonify({"history": response})
 
 
 @app.route('/tasks/add')
@@ -43,7 +43,9 @@ def add_task():
         "real_duration": request.args.get('real_duration'),
         "datetime": request.args.get('datetime'),
         "repeat": request.args.get('repeat'),
+        "comment": None,
         "feedback": None,
+        "color": request.args.get('color'),
     }
 
     if not task_data["name"]:
@@ -59,15 +61,16 @@ def add_task():
     data = DataBase()
     if task_data["tags"]["project"]:
         data.add_to_project(
-            project_id = task_data["tags"]["project"],
+            project_id=task_data["tags"]["project"],
             task_id=task_data["uuid"],
         )
-    
+
     data.add_task(
         data=task_data,
         user_id=1   # Default to user 1 for now
     )
     return jsonify({"result": True})
+
 
 @app.route('/projects/add')
 def add_project():
@@ -96,7 +99,6 @@ def add_project():
     return jsonify({"result": True})
 
 
-
 @app.route('/tasks/get')
 def get_tasks():
     from logic import DataBase
@@ -108,6 +110,7 @@ def get_tasks():
         "today_tasks": today_tasks,
         "overdue_tasks": overdue_tasks
     })
+
 
 @app.route('/projects/get')
 def get_projects():
