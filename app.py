@@ -40,7 +40,7 @@ def add_task():
         "completed": False,
         "tags": [tag[1:] for tag in request.args.get('tags', '').split()],
         "expected_duration": (int(request.args.get('expected_hours', '0'))) * 60 + int(request.args.get('expected_minutes', '0')),
-        "real_duration": request.args.get('real_duration'),
+        "real_duration": None,
         "datetime": request.args.get('datetime'),
         "repeat": request.args.get('repeat'),
         "comment": None,
@@ -51,7 +51,6 @@ def add_task():
     if not task_data["name"]:
         return jsonify({"result": False})
 
-    # id = request.args.get('id')
     assistant = AI(id=1)
     task_data["tags"] = {
         "user": task_data["tags"],
@@ -67,8 +66,37 @@ def add_task():
 
     data.add_task(
         data=task_data,
-        user_id=1   # Default to user 1 for now
+        user_id=1
     )
+
+    return jsonify({"result": True})
+
+
+@app.route('/tasks/edit')
+def edit_task():
+    from logic import DataBase
+    task_data = {
+        "name": request.args.get('name'),
+        "description": request.args.get('description'),
+        "tags": {
+            "user": [tag[1:] for tag in request.args.get('tags', '').split()],
+            "assistant": [],
+            "project": request.args.get('project'),
+        },
+        "expected_duration": (int(request.args.get('expected_hours', '0'))) * 60 + int(request.args.get('expected_minutes', '0')),
+        "datetime": request.args.get('datetime'),
+        "repeat": request.args.get('repeat'),
+    }
+
+    if not task_data["name"]:
+        return jsonify({"result": False})
+
+    data = DataBase()
+    data.edit_task(
+        task_data,
+        task_id=request.args.get('uuid'),
+    )
+
     return jsonify({"result": True})
 
 

@@ -11,7 +11,7 @@ class DataBase(Client):
 
     def add_task(self, data, user_id):
         response = self.table("tasks").insert(data).execute()
-        response = self.table("users").select(
+        self.table("users").select(
             "tasks").eq("id", user_id).execute()
         self.table("users").update(
             {
@@ -19,6 +19,12 @@ class DataBase(Client):
                     (response.data[0]["tasks"] or []) + [data["uuid"]],
             }
         ).eq("id", user_id).execute()
+        return
+
+    def edit_task(self, data, task_id):
+        self.table("tasks").update(
+            data
+        ).eq("uuid", task_id).execute()
         return
 
     def add_project(self, data, user_id):
