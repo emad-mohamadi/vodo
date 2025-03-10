@@ -137,7 +137,7 @@ def get_feedback():
 
     task_id = request.args.get('uuid')
     if not task_id:
-        jsonify({"result": False})
+        return jsonify({"result": False})
     task_data = {
         "completed_at": request.args.get('completed_at'),
         "feedback": request.args.get('feedback'),
