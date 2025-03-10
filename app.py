@@ -142,6 +142,7 @@ def get_feedback():
         "completed_at": request.args.get('completed_at'),
         "feedback": request.args.get('feedback'),
         "comment": request.args.get('comment'),
+        "real_duration": int(request.args.get('duration', '0')),
     }
 
     data = DataBase()
