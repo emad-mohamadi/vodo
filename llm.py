@@ -41,13 +41,21 @@ class AI:
         return self.history[-1]['content']
 
     def get_tags(self, task_data):
-        prompt = """
+        prompt1 = """
             Here is some information about a task which user is going to add.
-            Based on the information 1 to 3 tags for the task (use general tags and try to provide same tags for similar tasks).
-            You should only send this tags seperated with spaces and in PascalCase format.
         """
+        prompt2 = """
+            Based on the information add 1 to 3 related tags for the task. Choose your recommended tags from this list:
+            tags = [
+                "Work", "Personal", "Urgent", "Home", "Errand", "Health", "Finance", "Shopping",
+                "Study", "Meeting", "Project", "Travel", "Appointment", "Leisure",
+                "Fitness", "Family", "Social", "Research", "Creative", "Planning", "Review",
+                "Writing", "Design", "Development", "Analysis", "Entertainment", "Reminder",
+                "Learning", "Maintenance"
+            ]
+            """
         response = self.chat(
-            prompt=prompt+'\n\n'+json.dumps(task_data, indent=4),
+            prompt=prompt1+"\n"+task_data+"\n"+prompt2,
         )
         return response.split()
 
