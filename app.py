@@ -100,6 +100,18 @@ def edit_task():
     return jsonify({"result": True})
 
 
+@app.route('/tasks/delete')
+def delete_task():
+    from logic import DataBase
+    data = DataBase()
+    data.delete_task(
+        task_id=request.args.get('uuid'),
+        project_id=request.args.get('project'),
+    )
+
+    return jsonify({"result": True})
+
+
 @app.route('/projects/add')
 def add_project():
     from logic import DataBase

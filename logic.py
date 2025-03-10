@@ -2,7 +2,6 @@ from supabase import Client
 from os import environ
 from uuid import uuid1
 from datetime import datetime, timedelta, timezone
-from dateutil.relativedelta import relativedelta
 
 
 class DataBase(Client):
@@ -26,6 +25,32 @@ class DataBase(Client):
             data
         ).eq("uuid", task_id).execute()
         return
+
+    def delete_task(self, task_id, project_id=None, user_id=1):
+        user = self.table("users").select("*").eq(
+            "id", user_id).execute().data[0]
+        user["tasks"].remove(task_id)
+        self.table("users").update(
+            {
+                "tasks": user["tasks"],
+            }
+        ).eq("id", user_id).execute()
+        self.table("tasks").delete().eq("uuid", task_id)
+
+        if not project_id:
+            return True
+        project_tasks = self.table("projects").select(
+            "tasks"
+        ).eq(
+            "uuid", project_id
+        ).execute().data[0]["tasks"]
+        project_tasks.remove(task_id)
+        self.table("projects").update(
+            {
+                "tasks": project_tasks,
+            }
+        ).eq("uuid", project_id).execute()
+        return True
 
     def add_project(self, data, user_id):
         response = self.table("projects").insert(data).execute()
