@@ -41,8 +41,8 @@ class AI:
     def get_tags(self, task_data):
         prompt = """
             This dictionary contains information about a task which a user is going to add.
-            You are going to make some tags for it (about 3-4 tags). You should only send this tags seperated with spaces and no space in each name.
-            And they should be in PascalCase format.
+            Based on the information 1 to 3 tags for the task (use general tags and try to provide same tags for similar tasks).
+            You should only send this tags seperated with spaces and in PascalCase format.
         """
         response = self.chat(
             prompt=json.dumps(task_data, indent=4)+'\n'+prompt,
