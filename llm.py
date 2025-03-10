@@ -62,5 +62,5 @@ class AI:
         ).eq("id", self.id).execute()
 
 
-assistant = AI()
-print(assistant.chat(prompt="hello"))
+# assistant = AI()
+# print(assistant.chat(prompt="hello"))

@@ -115,6 +115,40 @@ def delete_task():
     return jsonify({"result": True})
 
 
+@app.route('/tasks/check')
+def check_task():
+    from logic import DataBase
+    data = DataBase()
+    data.check_task(
+        uuid=request.args.get('uuid'),
+        check=(request.args.get('check') == 'true'),
+        id=1
+    )
+    return jsonify({"result": request.args.get('check') == 'true'})
+
+
+@app.route('/tasks/feedback')
+def get_feedback():
+    from logic import DataBase
+
+    task_id = request.args.get('uuid')
+    if not task_id:
+        jsonify({"result": False})
+    task_data = {
+        "completed_at": request.args.get('completed_at'),
+        "feedback": request.args.get('feedback'),
+        "comment": request.args.get('comment'),
+    }
+
+    data = DataBase()
+    data.edit_task(
+        data=task_data,
+        task_id=task_id,
+    )
+
+    return jsonify({"result": True})
+
+
 @app.route('/projects/add')
 def add_project():
     from logic import DataBase
@@ -169,18 +203,6 @@ def get_projects():
             }
         ] + projects,
     })
-
-
-@app.route('/tasks/check')
-def check_task():
-    from logic import DataBase
-    data = DataBase()
-    data.check_task(
-        uuid=request.args.get('uuid'),
-        check=(request.args.get('check') == 'true'),
-        id=1
-    )
-    return jsonify({"result": request.args.get('check') == 'true'})
 
 
 @app.route('/ai/new-review')
