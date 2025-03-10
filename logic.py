@@ -9,8 +9,8 @@ class DataBase(Client):
         super().__init__(url, key)
 
     def add_task(self, data, user_id):
-        response = self.table("tasks").insert(data).execute()
-        self.table("users").select(
+        self.table("tasks").insert(data).execute()
+        response = self.table("users").select(
             "tasks").eq("id", user_id).execute()
         self.table("users").update(
             {

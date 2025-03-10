@@ -51,7 +51,7 @@ def add_task():
     if not task_data["name"]:
         return jsonify({"result": False})
 
-    assistant = AI(id=1)
+    assistant = AI(id=1, save=False)
     task_data["tags"] = {
         "user": task_data["tags"],
         "project": request.args.get('project'),
@@ -178,3 +178,8 @@ def check_task():
         id=1
     )
     return jsonify({"result": request.args.get('check') == 'true'})
+
+
+@app.route('/ai/new-review')
+def new_review():
+    pass
