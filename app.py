@@ -51,11 +51,15 @@ def add_task():
     if not task_data["name"]:
         return jsonify({"result": False})
 
-    assistant = AI(id=1, save=False)
+    task_data_llm = f"""
+                    Task: {task_data['name']}\n({task_data['description']})\nCurrent Tags:{task_data['tags']}\nExpected Duration: {task_data['expected_duration']} min\nDate and Time: {task_data['datetime']}\nRepeat:{task_data['repeat']}
+    """
+
+    assistant = AI(id=1, save=True) #TODO: False
     task_data["tags"] = {
         "user": task_data["tags"],
         "project": request.args.get('project'),
-        "assistant": assistant.get_tags(task_data=task_data),
+        "assistant": assistant.get_tags(task_data=task_data_llm),
     }
     data = DataBase()
     if task_data["tags"]["project"]:
