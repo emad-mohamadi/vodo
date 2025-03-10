@@ -48,7 +48,7 @@ class AI:
             Based on the information add 1 to 3 related tags for the task. Choose your recommended tags from this list:
             tags = [
                 "Work", "Personal", "Urgent", "Home", "Errand", "Health", "Finance", "Shopping",
-                "Study", "Meeting", "Project", "Travel", "Appointment", "Deadline", "Leisure",
+                "Study", "Meeting", "Project", "Travel", "Appointment", "Leisure",
                 "Fitness", "Family", "Social", "Research", "Creative", "Planning", "Review",
                 "Writing", "Design", "Development", "Analysis", "Entertainment", "Reminder",
                 "Learning", "Maintenance"

@@ -55,7 +55,7 @@ def add_task():
                     Task: {task_data['name']}\n({task_data['description']})\nCurrent Tags:{task_data['tags']}\nExpected Duration: {task_data['expected_duration']} min\nDate and Time: {task_data['datetime']}\nRepeat:{task_data['repeat']}
     """
 
-    assistant = AI(id=1, save=True) #TODO: False
+    assistant = AI(id=1, save=False)
     task_data["tags"] = {
         "user": task_data["tags"],
         "project": request.args.get('project'),
@@ -189,4 +189,5 @@ def check_task():
 
 @app.route('/ai/new-review')
 def new_review():
+    
     pass
