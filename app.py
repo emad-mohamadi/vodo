@@ -59,10 +59,13 @@ def add_task():
     }
     data = DataBase()
     if task_data["tags"]["project"]:
-        data.add_to_project(
-            project_id=task_data["tags"]["project"],
-            task_id=task_data["uuid"],
-        )
+        if task_data["tags"]["project"] == "null":
+            task_data["tags"]["project"] = ""
+        else:
+            data.add_to_project(
+                project_id=task_data["tags"]["project"],
+                task_id=task_data["uuid"],
+            )
 
     data.add_task(
         data=task_data,
