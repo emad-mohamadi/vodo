@@ -109,14 +109,22 @@ class DataBase(Client):
 
             if repeat != "No repeat" and task_datetime < today_end:
                 print(task["name"])
+                new_uuid = uuid1().__str__()
                 self.table("tasks").update(
-                    {"repeat": "No repeat"}
+                    {
+                        "repeat": "No repeat",
+                        "uuid": new_uuid,
+                    },
                 ).eq("uuid", task["uuid"]).execute()
+                task_ids.remove(task["uuid"])
+                task_ids.append(new_uuid)
+
                 new_time = task_datetime
                 last = deepcopy(task)
                 last.pop("created_at")
                 last.pop("id")
                 last["repeat"] = "No repeat"
+                last["completed"] = False
 
                 if repeat == "Daily":
                     new_time += timedelta(days=1)
@@ -134,6 +142,7 @@ class DataBase(Client):
                     new_task.pop("created_at")
                     new_task.pop("id")
                     new_task["repeat"] = "No repeat"
+                    new_task["completed"] = False
                     self.table("tasks").insert(new_task).execute()
                     last = deepcopy(new_task)
 
