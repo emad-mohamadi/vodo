@@ -35,7 +35,8 @@ class DataBase(Client):
                 "tasks": user["tasks"],
             }
         ).eq("id", user_id).execute()
-        self.table("tasks").delete().eq("uuid", task_id)
+        self.table("tasks").delete().eq("uuid", task_id).execute()
+    
 
         if not project_id:
             return True
