@@ -205,6 +205,7 @@ def get_projects():
             {
                 "name": "No project",
                 "uuid": None,
+                "color": "#000000",
             }
         ] + projects,
     })
@@ -217,7 +218,8 @@ def new_review():
     from datetime import datetime as dt
     data = DataBase()
     response = data.table("tasks").select("*").execute().data
-    response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%d %H:%M:%S.%f%z"))
+    response.sort(key=lambda t: dt.strptime(
+        t["datetime"], "%Y-%m-%d %H:%M:%S.%f%z"))
     tasks_data = None
     assistant = AI()
 

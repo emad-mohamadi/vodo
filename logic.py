@@ -2,13 +2,14 @@ from supabase import Client
 from os import environ
 from uuid import uuid1
 from datetime import datetime, timedelta, timezone
+from copy import deepcopy
 
 
 class DataBase(Client):
     def __init__(self, url=environ.get("SUPABASE_URL"), key=environ.get("SUPABASE_KEY")):
         super().__init__(url, key)
 
-    def add_task(self, data, user_id):
+    def add_task(self, data, user_id=1):
         self.table("tasks").insert(data).execute()
         response = self.table("users").select(
             "tasks").eq("id", user_id).execute()
@@ -36,7 +37,6 @@ class DataBase(Client):
             }
         ).eq("id", user_id).execute()
         self.table("tasks").delete().eq("uuid", task_id).execute()
-    
 
         if not project_id:
             return True
@@ -85,7 +85,7 @@ class DataBase(Client):
         ).eq("uuid", uuid).execute()
         return
 
-    def get_tasks(self, user_id):
+    def get_tasks(self, user_id=1):
         task_ids_response = self.table("users").select(
             "tasks").eq("id", user_id).execute()
         task_ids = task_ids_response.data[0]["tasks"] if task_ids_response.data else [
@@ -105,20 +105,67 @@ class DataBase(Client):
 
         for task in tasks:
             task_datetime = datetime.fromisoformat(task["datetime"])
-            repeat = task.get("repeat", "none")  # Default is "none" if missing
+            repeat = task.get("repeat", "No repeat")
 
-            # # Handle repeating tasks
-            # if repeat != "none" and task_datetime < today_end:
-            #     if repeat == "daily":
-            #         task_datetime += timedelta(days=1)
-            #     elif repeat == "weekly":
-            #         task_datetime += timedelta(weeks=1)
-            #     elif repeat == "monthly":
-            #         task_datetime += relativedelta(months=1)
-            #     elif repeat == "yearly":
-            #         task_datetime += relativedelta(years=1)
+            if repeat != "No repeat" and task_datetime < today_end:
+                print(task["name"])
+                self.table("tasks").update(
+                    {"repeat": "No repeat"}
+                ).eq("uuid", task["uuid"]).execute()
+                new_time = task_datetime
+                last = deepcopy(task)
+                last.pop("created_at")
+                last.pop("id")
+                last["repeat"] = "No repeat"
 
-            # Categorize tasks
+                if repeat == "Daily":
+                    new_time += timedelta(days=1)
+                elif repeat == "Weekly":
+                    new_time += timedelta(weeks=1)
+                elif repeat == "Monthly":
+                    new_time += timedelta(days=30)
+                elif repeat == "Yearly":
+                    new_time += timedelta(days=365)
+                while new_time < today_end:
+                    new_task = deepcopy(task)
+                    new_task["datetime"] = datetime.isoformat(new_time)
+                    new_task["uuid"] = uuid1().__str__()
+                    task_ids.append(new_task["uuid"])
+                    new_task.pop("created_at")
+                    new_task.pop("id")
+                    new_task["repeat"] = "No repeat"
+                    self.table("tasks").insert(new_task).execute()
+                    last = deepcopy(new_task)
+
+                    if repeat == "Daily":
+                        new_time += timedelta(days=1)
+                    elif repeat == "Weekly":
+                        new_time += timedelta(weeks=1)
+                    elif repeat == "Monthly":
+                        new_time += timedelta(days=30)
+                    elif repeat == "Yearly":
+                        new_time += timedelta(days=365)
+                    else:
+                        break
+
+                new_task = deepcopy(last)
+                new_task["datetime"] = datetime.isoformat(new_time)
+                new_task["repeat"] = repeat
+                print(new_task)
+                self.table("tasks").insert(new_task).execute()
+
+        self.table("users").update(
+            {
+                "tasks":
+                    task_ids,
+            }
+        ).eq("id", user_id).execute()
+
+        response = self.table("tasks").select("*").execute()
+        tasks = [task for task in response.data if task["uuid"] in task_ids]
+
+        for task in tasks:
+            task_datetime = datetime.fromisoformat(task["datetime"])
             if task_datetime > today_end:
                 ongoing_tasks[task["uuid"]] = task
             elif today_start <= task_datetime <= today_end:
@@ -139,14 +186,3 @@ class DataBase(Client):
             project for project in response.data if project["uuid"] in project_ids]
 
         return projects
-
-
-# d = DataBase()
-# print(d.table("users").select(
-#     "history").eq("id", 1).execute().data[0]["history"])
-# from logic import DataBase
-# from datetime import datetime as dt
-# data = DataBase()
-# response = data.table("tasks").select("*").execute().data
-# response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%dT%H:%M:%S.%f%z"))
-# print(response)
