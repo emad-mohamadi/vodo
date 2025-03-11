@@ -160,8 +160,10 @@ class DataBase(Client):
                 new_task = deepcopy(last)
                 new_task["datetime"] = datetime.isoformat(new_time)
                 new_task["repeat"] = repeat
+                new_time["uuid"] = new_uuid
                 print(new_task)
                 self.table("tasks").insert(new_task).execute()
+                task_ids.append(new_uuid)
 
         self.table("users").update(
             {
