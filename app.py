@@ -126,7 +126,6 @@ def check_task():
     data.check_task(
         uuid=request.args.get('uuid'),
         check=(request.args.get('check') == 'true'),
-        id=1
     )
     return jsonify({"result": request.args.get('check') == 'true'})
 
@@ -172,11 +171,9 @@ def add_project():
     if not project_data["name"]:
         return jsonify({"result": False})
 
-    # id = request.args.get('id')
     data = DataBase()
     data.add_project(
         data=project_data,
-        user_id=1   # Default to user 1 for now
     )
     return jsonify({"result": True})
 
@@ -185,8 +182,7 @@ def add_project():
 def get_tasks():
     from logic import DataBase
     data = DataBase()
-    user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
-    ongoing_tasks, today_tasks, overdue_tasks = data.get_tasks(user_id)
+    ongoing_tasks, today_tasks, overdue_tasks = data.get_tasks()
     return jsonify({
         "ongoing_tasks": ongoing_tasks,
         "today_tasks": today_tasks,
@@ -198,8 +194,7 @@ def get_tasks():
 def get_projects():
     from logic import DataBase
     data = DataBase()
-    user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
-    projects = data.get_projects(user_id)
+    projects = data.get_projects()
     return jsonify({
         "projects": [
             {

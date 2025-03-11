@@ -37,7 +37,7 @@ class DataBase(Client):
         ).eq("uuid", project_id).execute()
         return True
 
-    def add_project(self, data, user_id):
+    def add_project(self, data):
         self.table("projects").insert(data).execute()
         return
 
@@ -52,7 +52,7 @@ class DataBase(Client):
         ).eq("uuid", project_id).execute()
         return
 
-    def check_task(self, uuid, check: bool, id: int):
+    def check_task(self, uuid, check: bool):
         self.table("tasks").update(
             {
                 "completed":
