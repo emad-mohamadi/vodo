@@ -212,4 +212,13 @@ def get_projects():
 
 @app.route('/ai/new-review')
 def new_review():
+    from logic import DataBase
+    from llm import AI
+    from datetime import datetime as dt
+    data = DataBase()
+    response = data.table("tasks").select("*").execute().data
+    response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%d %H:%M:%S.%f%z"))
+    tasks_data = None
+    assistant = AI()
+
     pass

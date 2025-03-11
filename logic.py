@@ -143,3 +143,9 @@ class DataBase(Client):
 # d = DataBase()
 # print(d.table("users").select(
 #     "history").eq("id", 1).execute().data[0]["history"])
+# from logic import DataBase
+# from datetime import datetime as dt
+# data = DataBase()
+# response = data.table("tasks").select("*").execute().data
+# response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%dT%H:%M:%S.%f%z"))
+# print(response)

@@ -53,13 +53,16 @@ class AI:
                 "Writing", "Design", "Development", "Analysis", "Entertainment", "Reminder",
                 "Learning", "Maintenance"
             ]
+            Just send me the tags splitted by spaces.
             """
         response = self.chat(
             prompt=prompt1+"\n"+task_data+"\n"+prompt2,
         )
         return response.split()
 
-    def get_review(self, all_tasks_data):
+    def get_review(self, tasks_data):
+        prompt1 = """pass"""#TODO
+
         pass
 
     def save_history(self):
