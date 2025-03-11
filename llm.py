@@ -45,7 +45,7 @@ class AI:
             Here is some information about a task which user is going to add.
         """
         prompt2 = """
-            Based on the information add 1 to 3 related tags for the task. Choose your recommended tags from this list:
+            Based on the information add 1 to 3 related tags for the task. Choose your recommended tags from this list but don't give duplicate tags as which the task already has:
             tags = [
                 "Work", "Personal", "Urgent", "Home", "Errand", "Health", "Finance", "Shopping",
                 "Study", "Meeting", "Project", "Travel", "Appointment", "Leisure",
