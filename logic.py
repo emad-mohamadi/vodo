@@ -92,7 +92,7 @@ class DataBase(Client):
         ]
 
         response = self.table("tasks").select("*").execute()
-        tasks = [task for task in response.data if task["uuid"] in task_ids]
+        tasks = [task for task in response.data]
 
         now = datetime.now(timezone.utc)
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -173,7 +173,7 @@ class DataBase(Client):
         ).eq("id", user_id).execute()
 
         response = self.table("tasks").select("*").execute()
-        tasks = [task for task in response.data if task["uuid"] in task_ids]
+        tasks = [task for task in response.data]
 
         for task in tasks:
             task_datetime = datetime.fromisoformat(task["datetime"])
@@ -197,3 +197,7 @@ class DataBase(Client):
             project for project in response.data if project["uuid"] in project_ids]
 
         return projects
+
+
+d = DataBase()
+d.get_tasks()
