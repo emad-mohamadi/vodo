@@ -86,7 +86,7 @@ def edit_task():
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "tags": {
-            "user": [tag for tag in request.args.get('tags', '').split()],
+            "user": request.args.get('tags', '').split(),
             "assistant": [],
             "project": request.args.get('project'),
         },
@@ -126,7 +126,6 @@ def check_task():
     data.check_task(
         uuid=request.args.get('uuid'),
         check=(request.args.get('check') == 'true'),
-        id=1
     )
     return jsonify({"result": request.args.get('check') == 'true'})
 
@@ -172,21 +171,47 @@ def add_project():
     if not project_data["name"]:
         return jsonify({"result": False})
 
-    # id = request.args.get('id')
     data = DataBase()
     data.add_project(
         data=project_data,
-        user_id=1   # Default to user 1 for now
     )
     return jsonify({"result": True})
 
+@app.route('/projects/edit')
+def edit_project():
+    from logic import DataBase
+    project_id = request.args.get('uuid')
+    project_data = {
+        "name": request.args.get('name'),
+        "description": request.args.get('description'),
+        "deadline": request.args.get('deadline'),
+    }
+
+    if not project_data["name"]:
+        return jsonify({"result": False})
+    data = DataBase()
+    data.edit_project(
+        data=project_data,
+        project_id=project_id,
+    )
+    return jsonify({"result": True})
+
+@app.route('/projects/delete')
+def delete_project():
+    from logic import DataBase
+    project_id = request.args.get('uuid')
+    data = DataBase()
+    data.delete_project(
+        project_id=project_id,
+        keep_tasks=(request.args.get('keep_tasks')=="true"),
+    )
+    return jsonify({"result": True})
 
 @app.route('/tasks/get')
 def get_tasks():
     from logic import DataBase
     data = DataBase()
-    user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
-    ongoing_tasks, today_tasks, overdue_tasks = data.get_tasks(user_id)
+    ongoing_tasks, today_tasks, overdue_tasks = data.get_tasks()
     return jsonify({
         "ongoing_tasks": ongoing_tasks,
         "today_tasks": today_tasks,
@@ -198,13 +223,13 @@ def get_tasks():
 def get_projects():
     from logic import DataBase
     data = DataBase()
-    user_id = int(request.args.get('user_id', 1))   # Default to user 1 for now
-    projects = data.get_projects(user_id)
+    projects = data.get_projects()
     return jsonify({
         "projects": [
             {
                 "name": "No project",
                 "uuid": None,
+                "color": "#000000",
             }
         ] + projects,
     })
