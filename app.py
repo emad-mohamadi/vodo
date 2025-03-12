@@ -255,9 +255,12 @@ def new_review():
         if not taskinfo['tags']['project']:
             project_str = "No Project"
         else:
-            project_properties = data.table("projects").select("*").eq("uuid", taskinfo['tags']['project']).execute().data
-            # print(taskinfo['tags']['project'])
-            project_str = project_properties[0]["name"] + " (" + project_properties[0]["description"] + ")"
+            try:
+                project_properties = data.table("projects").select("*").eq("uuid", taskinfo['tags']['project']).execute().data
+                # print(taskinfo['tags']['project'])
+                project_str = project_properties[0]["name"] + " (" + project_properties[0]["description"] + ")"
+            except:
+                project_str = project_properties[0]["name"]
         # project_str = taskinfo['tags']['project'] if taskinfo['tags']['project'] else "No Project"
         
         tags_str = ", ".join(taskinfo['tags']['user']) +", "+ ", ".join(taskinfo['tags']['assistant'])
