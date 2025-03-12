@@ -282,8 +282,8 @@ def new_review():
         tasks_data += "\n\n"
     assistant = AI()
     review = assistant.get_review(tasks_data=tasks_data)
-    
     # print(tasks_data)
     print(review)
+    return jsonify({"result": True})
 
 new_review()
