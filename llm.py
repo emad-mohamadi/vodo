@@ -24,7 +24,7 @@ class AI:
     def chat(self, prompt: str, role="user", model='gpt-4o', temprature=1) -> str:
         self.history.append({"role": role, "content": prompt})
         response = self.client.chat.completions.create(
-            messages=self.history,
+            messages=self.history[:2] + [{"role": role, "content": prompt}],
             model=model,
             temperature=temprature,
             max_tokens=4096,
@@ -135,6 +135,7 @@ Ensure your suggestions align with the user's goals, habits, and productivity tr
 
 I will send you the data and you send me the response (exactly in the format I mentioned)
 """
+
         response = self.chat(
             prompt=tasks_data
         )
