@@ -46,6 +46,19 @@ class DataBase(Client):
             data
         ).eq("uuid", project_id).execute()
         return
+    
+    def delete_project(self, project_id, keep_tasks=True):
+        task_ids = self.table("projects").select("tasks").eq("uuid", project_id).execute().data[0]["tasks"]
+        if not keep_tasks:
+            for task_id in task_ids:
+                self.table("tasks").delete().eq("uuid", task_id).execute()
+        else:
+            for task_id in task_ids:    
+                tags = self.table("tasks").select("tags").eq("uuid", task_id).execute().data[0]["tags"]
+                tags["project"] = ""
+                self.table("tasks").update({"tags": tags}).eq("uuid", task_id).execute()
+        self.table("projects").delete().eq("uuid", project_id).execute()
+        return
 
     def add_to_project(self, project_id, task_id):
         response = self.table("projects").select(

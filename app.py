@@ -196,6 +196,17 @@ def edit_project():
     )
     return jsonify({"result": True})
 
+@app.route('/projects/delete')
+def delete_project():
+    from logic import DataBase
+    project_id = request.args.get('uuid')
+    data = DataBase()
+    data.delete_project(
+        project_id=project_id,
+        keep_tasks=request.args.get('keep_tags', True),
+    )
+    return jsonify({"result": True})
+
 @app.route('/tasks/get')
 def get_tasks():
     from logic import DataBase
