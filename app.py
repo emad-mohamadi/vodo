@@ -86,7 +86,7 @@ def edit_task():
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "tags": {
-            "user": [tag[1:] for tag in request.args.get('tags', '').split()],
+            "user": request.args.get('tags', '').split(),
             "assistant": [],
             "project": request.args.get('project'),
         },
@@ -177,6 +177,24 @@ def add_project():
     )
     return jsonify({"result": True})
 
+@app.route('/projects/edit')
+def edit_project():
+    from logic import DataBase
+    project_id = request.args.get('uuid')
+    project_data = {
+        "name": request.args.get('name'),
+        "description": request.args.get('description'),
+        "deadline": request.args.get('deadline'),
+    }
+
+    if not project_data["name"]:
+        return jsonify({"result": False})
+    data = DataBase()
+    data.edit_project(
+        data=project_data,
+        project_id=project_id,
+    )
+    return jsonify({"result": True})
 
 @app.route('/tasks/get')
 def get_tasks():

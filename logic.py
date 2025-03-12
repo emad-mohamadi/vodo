@@ -40,6 +40,12 @@ class DataBase(Client):
     def add_project(self, data):
         self.table("projects").insert(data).execute()
         return
+    
+    def edit_project(self, data, project_id):
+        self.table("projects").update(
+            data
+        ).eq("uuid", project_id).execute()
+        return
 
     def add_to_project(self, project_id, task_id):
         response = self.table("projects").select(
