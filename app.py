@@ -286,4 +286,4 @@ def new_review():
     print(review)
     return jsonify({"result": True})
 
-new_review()
+# new_review()
