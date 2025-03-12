@@ -246,7 +246,7 @@ def new_review():
     response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%dT%H:%M:%S.%f%z"))
 
     tasks_data = ""
-    for taskinfo in response:
+    for taskinfo in response[-10:]:
         name_str = f"{taskinfo['name']}"
         description_str = taskinfo['description'] if taskinfo['description'] else "No Description"
         datetime_str = f"{taskinfo['datetime']}"
