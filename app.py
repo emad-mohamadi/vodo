@@ -33,6 +33,9 @@ def add_task():
     from logic import DataBase
     from llm import AI
     from uuid import uuid1
+    datetimefixed = request.args.get('datetime')
+    if datetimefixed[19] != ".":
+        datetimefixed = datetimefixed[:19] + ".001" + datetimefixed[19:]
     task_data = {
         "uuid": uuid1().__str__(),
         "name": request.args.get('name'),
@@ -41,7 +44,7 @@ def add_task():
         "tags": [tag for tag in request.args.get('tags', '').split()],
         "expected_duration": (int(request.args.get('expected_hours', '0'))) * 60 + int(request.args.get('expected_minutes', '0')),
         "real_duration": None,
-        "datetime": request.args.get('datetime'),
+        "datetime": datetimefixed,
         "repeat": request.args.get('repeat'),
         "comment": None,
         "feedback": None,
