@@ -63,7 +63,7 @@ def add_task():
     }
     data = DataBase()
     if task_data["tags"]["project"]:
-        if task_data["tags"]["project"] == "null":
+        if task_data["tags"]["project"] in ["null", "No project"]:
             task_data["tags"]["project"] = ""
         else:
             data.add_to_project(
