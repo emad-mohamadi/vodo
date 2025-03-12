@@ -38,7 +38,7 @@ def add_task():
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "completed": False,
-        "tags": [tag[1:] for tag in request.args.get('tags', '').split()],
+        "tags": [tag for tag in request.args.get('tags', '').split()],
         "expected_duration": (int(request.args.get('expected_hours', '0'))) * 60 + int(request.args.get('expected_minutes', '0')),
         "real_duration": None,
         "datetime": request.args.get('datetime'),
@@ -86,7 +86,7 @@ def edit_task():
         "name": request.args.get('name'),
         "description": request.args.get('description'),
         "tags": {
-            "user": [tag[1:] for tag in request.args.get('tags', '').split()],
+            "user": [tag for tag in request.args.get('tags', '').split()],
             "assistant": [],
             "project": request.args.get('project'),
         },
@@ -217,8 +217,43 @@ def new_review():
     from datetime import datetime as dt
     data = DataBase()
     response = data.table("tasks").select("*").execute().data
-    response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%d %H:%M:%S.%f%z"))
-    tasks_data = None
-    assistant = AI()
+    response.sort(key=lambda t: dt.strptime(t["datetime"], "%Y-%m-%dT%H:%M:%S.%f%z"))
 
-    pass
+    tasks_data = ""
+    for taskinfo in response:
+        name_str = f"{taskinfo['name']}"
+        description_str = taskinfo['description'] if taskinfo['description'] else "No Description"
+        datetime_str = f"{taskinfo['datetime']}"
+        expected_duration_str = f"{taskinfo['expected_duration']}"
+        repeat_str = f"{taskinfo['repeat']}"
+        if not taskinfo['tags']['project']:
+            project_str = "No Project"
+        else:
+            project_properties = data.table("projects").select("*").eq("uuid", taskinfo['tags']['project']).execute().data
+            # print(taskinfo['tags']['project'])
+            project_str = project_properties[0]["name"] + " (" + project_properties[0]["description"] + ")"
+        # project_str = taskinfo['tags']['project'] if taskinfo['tags']['project'] else "No Project"
+        
+        tags_str = ", ".join(taskinfo['tags']['user']) +", "+ ", ".join(taskinfo['tags']['assistant'])
+        ifcompleted_str = "Yes" if taskinfo['completed'] else "No"
+        completed_at_str = f"{taskinfo['completed_at']}"
+        real_duration_str = f"{taskinfo['real_duration']}"
+        comment_str = f"{taskinfo['comment']}"
+        feedback_str = f"{taskinfo['feedback']}"
+        tasks_data += 'Name: '+name_str+"\n"+"Description: "+description_str+"\n"+"Date and Time: "+datetime_str+"\n"+"Estimated Duration: "+expected_duration_str+" min"+"\n"+"Repeat: "+repeat_str+"\n"+"Project: "+project_str+"\n"+"Tags: "+tags_str+"\n"+"Done? "+ifcompleted_str
+        if taskinfo['completed']:
+            if completed_at_str:
+                tasks_data += "\n"+"Completed at "+completed_at_str
+            if real_duration_str:
+                tasks_data += "\n"+"Real Duration: "+real_duration_str
+            if feedback_str:
+                tasks_data += "\n"+"Feedback: "+feedback_str
+            if comment_str:
+                tasks_data += "\n"+"User Comment: "+comment_str
+        tasks_data += "\n\n"
+    assistant = AI()
+    review = assistant.get_review(tasks_data=tasks_data)
+    # print(tasks_data)
+    print(review)
+
+new_review()
