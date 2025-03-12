@@ -203,7 +203,7 @@ def delete_project():
     data = DataBase()
     data.delete_project(
         project_id=project_id,
-        keep_tasks=request.args.get('keep_tags', True),
+        keep_tasks=request.args.get('keep_tasks', True),
     )
     return jsonify({"result": True})
 
