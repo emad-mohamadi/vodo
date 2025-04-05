@@ -1,4 +1,4 @@
-# [Vodo: AI Task Manager](https://vodo.plasmic.run/)
+# <img src="https://github.com/emad-mohamadi/vodo/blob/main/logo.png" width=20 height=20 /> [Vodo: AI Task Manager](https://vodo.plasmic.run/)
 
 Web-based task manager and to-do list, enhanced with AI features.
 
