@@ -2,7 +2,7 @@
 
 Web-based task manager and to-do list, enhanced with AI features.
 
-<mark>~~Live~~ website at [vodo.plasmic.run](https://vodo.plasmic.run/)</mark> - (Made in [Plasmic Studio](https://www.plasmic.app/))
+<mark>~~Live website~~ at [vodo.plasmic.run](https://vodo.plasmic.run/)</mark> - (Made in [Plasmic Studio](https://www.plasmic.app/))
 
 > [!WARNING]
 > Website is temporarely down and non-functional due to database subscription limits.
